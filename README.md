@@ -1,4 +1,23 @@
 # Miniature-Autonomous-Car-using-Raspberry-Pi
+
+Copyright (c) 2022, Dishankpatel1,
+Author: Dishank Patel,
+All rights reserved.
+
+Note: This project is created in partial fulfilment of the requirement for the qualification of BEng Mechatronics Engineering, De Montfort University.
+
+Module Title: ENGD3000 Individual Project 
+
+Project Title: Miniature Autonomous Car using Raspberry-Pi
+
+Supervisor: Dr Serhan Cosar
+
+
+This source code is licensed under the BSD-style license found in the
+LICENSE file in the root directory of this source tree. 
+
+
+Short Description:
 The project outcome is a miniature autonomous car for the exploration and navigation of the environment equipped with an HC-SR04 sensor to avoid unnecessary obstacles and a Pi-camera module to recognise object.
 
 Before starting the project, ensure you are running the latest version of python, numpy and necessary libraries under rasbian software. 
@@ -43,7 +62,7 @@ CONF_SWAPSIZE=2048
 # The breakdown of project stages are listed below :
 
 # Components Required 
-The project initiates with finding of essential components required and creating a bill of materials/components for ordering. (Note : All generic components such as jumper-wires, LEDs, screws, copper stand-off and others are not mentioned as it can be obtained externally)
+The project initiates with finding of essential components required and creating a bill of materials/components for ordering. (Note : All generic components such as jumper-wires, LEDs, screws, copper stand-off and others are not mentioned as it can be obtained externally).
 ![BIll of Components](https://user-images.githubusercontent.com/100168764/168693849-db7f2071-b8d6-4ef0-8321-943c269cd5ff.jpg)
 
 
@@ -53,19 +72,19 @@ https://drive.google.com/drive/folders/1RpqP54dAROcASdLiJPIBShN6cyHpaFWD?usp=sha
 
 
 # Aseembling Robot 
-Once all parts are manufactured please install the car accordingly to the steps shown in the Final Report 6.4 Assembling the robot section. (Note: if the report is not available/viable please contact me, as this could be due to incompetence of report marking causing plagiarism)
+Once all parts are manufactured please install the car accordingly to the steps shown in the Final Report 6.4 Assembling the robot section. (Note: if the report is not available/viable please contact me, as this could be due to incompetence of report marking causing plagiarism).
 
 Use necessary components to assemble the car, such as screw, nylon spacer, copper stand-off, etc.
 
 
 # Hardware Connection
-Below shows the connection diagram created using Fritzing software with the understanding of GPIO-pins from the datasheet of Raspberry-Pi 4B. Note, additional mini-breadboard is used to create a common +5V and GND line, due to only two +5V rail availability on Raspberry-Pi GPIO-pins
+Below shows the connection diagram created using Fritzing software with the understanding of GPIO-pins from the datasheet of Raspberry-Pi 4B. Note, additional mini-breadboard is used to create a common +5V and GND line, due to only two +5V rail availability on Raspberry-Pi GPIO-pins.
 
 ![Connection Diagram V1](https://user-images.githubusercontent.com/100168764/168692178-78408471-d456-4aa8-9913-b72c7e377bc6.jpg)
 
 # Programming & Testing 
 
-Please refer to Porgramming & Testing folder, where sub-modules codes are created testing individual hardware which contructs the final code
+Please refer to Porgramming & Testing folder, where sub-modules codes are created testing individual hardware which contructs the final code, refer to Main Code.
 
 Additionally, project test videos are created showing all step-by-step approach displaying the build process of final code.
 
