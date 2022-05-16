@@ -20,6 +20,7 @@ LICENSE file in the root directory of this source tree.
 Short Description:
 The project outcome is a miniature autonomous car for the exploration and navigation of the environment equipped with an HC-SR04 sensor to avoid unnecessary obstacles and a Pi-camera module to recognise object.
 
+# IMPORTANT NOTES
 Before starting the project, ensure you are running the latest version of python, numpy and necessary libraries under Raspbian OS. 
 
 ~$ sudo apt update
