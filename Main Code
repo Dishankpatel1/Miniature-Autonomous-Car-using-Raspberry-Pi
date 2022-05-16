@@ -1,0 +1,220 @@
+Copyright (c) 2022, Dishankpatel1
+Author: Dishank Patel
+All rights reserved.
+
+This source code is licensed under the BSD-style license found in the
+LICENSE file in the root directory of this source tree. 
+
+
+import RPi.GPIO as GPIO
+from time import sleep
+from gpiozero import Servo
+import time
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+
+from gpiozero.pins.pigpio import PiGPIOFactory
+
+factory = PiGPIOFactory()
+GPIO.setwarnings(False)
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(20,GPIO.OUT)
+GPIO.setup(21,GPIO.OUT)
+
+Tr = 11   
+Ec = 8 
+servo = Servo(12, min_pulse_width= 0.5/1000, max_pulse_width=2.5/1000, pin_factory=factory)
+thre = 38   #Increasing the thresold will impact upon the scan speed 
+cap = cv2.VideoCapture(0)
+
+#Defining Both RED and Green LEDs
+def RedON():
+    GPIO.output(20,GPIO.HIGH)
+
+def RedOFF():
+    GPIO.output(20,GPIO.LOW)
+
+def GreenON():
+    GPIO.output(21,GPIO.HIGH)
+
+def GreenOFF():
+    GPIO.output(21,GPIO.LOW)
+
+def LEDOFF():
+     GPIO.output(20,GPIO.LOW)
+     GPIO.output(21,GPIO.LOW)
+
+def livevideo():
+    for i in range (0,4): 
+        ret, frame = cap.read()
+        img_rgb = frame
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        template = cv2.imread('/home/pi/Desktop/Individual Project /Code/camera/Cap_white_wolf_template.jpg',0)
+        template2 = cv2.imread('/home/pi/Desktop/Individual Project /Code/camera/Cap_sheep_template.jpg',0)
+        h, w = template.shape[::]
+        h1, w1 = template2.shape[::]
+        res = cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED)
+        res2 = cv2.matchTemplate(gray, template2, cv2.TM_CCOEFF_NORMED)
+        plt.imshow(res, cmap='gray')
+        plt.imshow(res2, cmap='gray')
+        threshold = 0.8 #Pick only values above 0.8. For TM_CCOEFF_NORMED, larger values = good fit.
+        loc = np.where( res >= threshold)
+        loc2 = np.where( res2 >= threshold)
+        LEDOFF()      #Default OFF
+        for pt in zip(*loc[::-1]):   #-1 to swap the values as we assign x and y coordinate to draw the rectangle.
+            cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 1)
+            RedON()
+        for pt in zip(*loc2[::-1]):   #-1 to swap the values as we assign x and y coordinate to draw the rectangle.
+            cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 1)
+            GreenON()
+        cv2.imshow("Matched image",img_rgb)
+        #cv2.imshow('gray', gray)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            print("livevideo")
+
+class Motor():
+    def __init__(self,ENA,IN1,IN2,ENB,IN3,IN4):
+        self.ENA = ENA
+        self.IN1 = IN1
+        self.IN2 = IN2
+        self.ENB = ENB
+        self.IN3 = IN3
+        self.IN4 = IN4
+        GPIO.setup(self.ENA,GPIO.OUT)
+        GPIO.setup(self.IN1,GPIO.OUT)
+        GPIO.setup(self.IN2,GPIO.OUT)
+        GPIO.setup(self.ENB,GPIO.OUT)
+        GPIO.setup(self.IN3,GPIO.OUT)
+        GPIO.setup(self.IN4,GPIO.OUT)
+        self.pwmA = GPIO.PWM(self.ENA, 100);
+        self.pwmA.start(0);
+        self.pwmB = GPIO.PWM(self.ENB, 100);
+        self.pwmB.start(0);
+
+        
+    def MoveForward(self,x=100,t=0):
+        self.pwmA.ChangeDutyCycle(x);
+        GPIO.output(self.IN1,GPIO.HIGH)
+        GPIO.output(self.IN2,GPIO.LOW)
+        self.pwmB.ChangeDutyCycle(x);
+        GPIO.output(self.IN3,GPIO.HIGH)
+        GPIO.output(self.IN4,GPIO.LOW)
+        sleep(t)
+        
+    def MoveBackward(self,x=100,t=0):
+        self.pwmA.ChangeDutyCycle(x);
+        GPIO.output(self.IN1,GPIO.LOW)
+        GPIO.output(self.IN2,GPIO.HIGH)
+        self.pwmB.ChangeDutyCycle(x);
+        GPIO.output(self.IN3,GPIO.LOW)
+        GPIO.output(self.IN4,GPIO.HIGH)
+        sleep(t)
+
+    def MoveLeft(self,x=100,t=0):
+        self.pwmA.ChangeDutyCycle(x);
+        GPIO.output(self.IN1,GPIO.LOW)
+        GPIO.output(self.IN2,GPIO.HIGH)
+        self.pwmB.ChangeDutyCycle(x);
+        GPIO.output(self.IN3,GPIO.HIGH)
+        GPIO.output(self.IN4,GPIO.LOW)
+        sleep(t)
+
+    def MoveRight(self,x=100,t=0):
+        self.pwmA.ChangeDutyCycle(x);
+        GPIO.output(self.IN1,GPIO.HIGH)
+        GPIO.output(self.IN2,GPIO.LOW)
+        self.pwmB.ChangeDutyCycle(x);
+        GPIO.output(self.IN3,GPIO.LOW)
+        GPIO.output(self.IN4,GPIO.HIGH)
+        sleep(t)
+        
+    def stop(self,t=0):
+        self.pwmA.ChangeDutyCycle(0);
+        self.pwmB.ChangeDutyCycle(0);
+        GPIO.output(self.IN1,GPIO.LOW)
+        GPIO.output(self.IN2,GPIO.LOW)
+        GPIO.output(self.IN3,GPIO.LOW)
+        GPIO.output(self.IN4,GPIO.LOW)
+        sleep(t)
+
+Motor1 = Motor(2,3,4,17,27,22)
+
+def checkdist():  
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(Tr, GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(Ec, GPIO.IN)
+    GPIO.output(Tr, GPIO.HIGH) # Set the input terminal of the module to high level and send out an initial sound wave.  
+    time.sleep(0.000015)  
+    GPIO.output(Tr, GPIO.LOW)
+
+    while not GPIO.input(Ec): # When the module no longer receives the initial sound wave ①
+        pass  
+    t1 = time.time() # Write down the time when the initial sound wave was emitted. 
+    while GPIO.input(Ec): # When the module receives the return sound wave.
+        pass  
+    t2 = time.time() # Write down the time when the return sound wave was captured.
+  
+    return (t2-t1)*340/2 # Calculate the distance. 
+
+while True:
+    LEDOFF()
+    servo.mid()
+    livevideo()
+    cv2.waitKey(1)
+    time.sleep(0.1)
+    distance = checkdist()*100
+    middle_distance=distance
+    print("%.2f cm, middle" %middle_distance) 
+    if middle_distance < thre:
+        Motor1.stop()
+        Motor1.MoveBackward(23,0.1)  # changed speed from depending upon surface
+        print(Motor1.MoveBackward)
+        time.sleep(1)
+        Motor1.stop()
+        servo.max()
+        livevideo()
+        cv2.waitKey(1)
+        time.sleep(0.1)
+        distance = checkdist()*100
+        left_distance=distance
+        print("%.2f cm, left" %left_distance) 
+        time.sleep(0.25)
+        
+        servo.mid()
+        time.sleep(1)
+        servo.min()
+        livevideo()
+        cv2.waitKey(1)
+        time.sleep(0.1)
+        distance = checkdist()*100
+        right_distance =distance
+        print("%.2f cm, right" %right_distance) 
+        time.sleep(0.25)
+             
+        servo.mid()
+        time.sleep(1)
+        if right_distance > left_distance:
+            Motor1.MoveRight(23,0.1)  # changed speed from 23  # Note 0.55 seems the ideal turn, also 0.65 however as the motor are being used more heat produces it affects
+            print(Motor1.MoveRight)
+        elif right_distance < left_distance:
+            Motor1.MoveLeft(23,0.1) # changed speed from 23
+            print(Motor1.MoveLeft)
+        else :                                #right_distance < thre or left_distance < thre:
+            Motor1.MoveBackward(23,1) # changed speed from 23
+            print(Motor1.MoveBackward)
+            time.sleep(1)
+    else:   
+        Motor1.MoveForward(16,0.1)  # changed speed from 17
+        print(Motor1.MoveForward)
+cap.release()
+cv2.destroyAllWindows()
