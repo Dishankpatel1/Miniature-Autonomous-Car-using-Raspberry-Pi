@@ -64,6 +64,7 @@ CONF_SWAPSIZE=2048
 
 # Components Required 
 The project initiates with finding of essential components required and creating a bill of materials/components for ordering. (Note : All generic components such as jumper-wires, LEDs, screws, copper stand-off and others are not mentioned as it can be obtained externally).
+
 ![BIll of Components](https://user-images.githubusercontent.com/100168764/168693849-db7f2071-b8d6-4ef0-8321-943c269cd5ff.jpg)
 
 
