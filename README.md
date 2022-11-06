@@ -74,7 +74,9 @@ https://drive.google.com/drive/folders/1RpqP54dAROcASdLiJPIBShN6cyHpaFWD?usp=sha
 
 
 # Aseembling Robot 
-Once all parts are manufactured please install the car accordingly to the steps shown in the Final Report 6.4 Assembling the robot section. (Note: if the report is not available/viable please contact me, as this could be due to incompetence of report marking causing plagiarism).
+Once all parts are manufactured please install the car accordingly to the steps shown in the Final Report 6.4 Assembling the robot section. Please follow the link below:
+https://drive.google.com/drive/folders/1Lc6iPdI7VmNooXg-PGNDrBzzVFrz9-ac?usp=share_link
+(Note: if the report is not available/viable please contact me, as this could be due to incompetence of report marking causing plagiarism).
 
 Use necessary components to assemble the car, such as screw, nylon spacer, copper stand-off, etc.
 
